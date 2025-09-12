@@ -71,42 +71,48 @@ body {
 .history-list li:hover .delete-conv-btn { opacity: 0.7; }
 .delete-conv-btn:hover { opacity: 1; }
 
-/* --- Chat Window --- */
-/* THIS IS THE KEY FIX: Making the window a flex column */
+/* === THIS IS THE MAIN FIX === */
+/* Structures the entire right-side panel */
 .chat-window {
     flex-grow: 1;
-    display: flex; /* ADDED */
-    flex-direction: column; /* ADDED */
+    display: flex;
+    flex-direction: column;
     background-color: var(--chat-bg);
     transition: background-color 0.3s;
-    overflow: hidden; /* ADDED */
+    overflow: hidden; /* Important */
 }
 
+/* Header stays at the top */
 .chat-header {
     padding: 15px 20px;
     border-bottom: 1px solid var(--border-color);
-    font-weight: 600;
-    font-size: 1.2rem;
     background: var(--header-bg);
     z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.3s, border-color 0.3s;
-    flex-shrink: 0; /* PREVENTS HEADER FROM SHRINKING */
+    flex-shrink: 0; /* Prevents the header from shrinking */
 }
-
 .header-controls { display: flex; align-items: center; gap: 15px; }
 .username-display { font-size: 0.9rem; font-weight: 400; color: var(--secondary-color); white-space: nowrap; }
 
-/* THIS IS THE KEY FIX: Making the message area scrollable */
+/* Message area expands and scrolls */
 .chat-messages {
-    flex-grow: 1; /* ALLOWS THIS AREA TO EXPAND */
+    flex-grow: 1; /* This is key, it takes up all available space */
     padding: 30px;
-    overflow-y: auto; /* MAKES IT SCROLLABLE */
+    overflow-y: auto; /* This makes it scrollable */
     display: flex;
     flex-direction: column;
 }
+
+/* Input area stays at the bottom */
+.chat-input-area {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    background: var(--header-bg);
+    flex-shrink: 0; /* Prevents the input area from shrinking */
+}
+/* === END OF MAIN FIX === */
 
 .message { display: flex; margin-bottom: 20px; max-width: 75%; animation: fadeIn 0.5s ease-out; }
 .message-content { padding: 12px 18px; border-radius: 18px; line-height: 1.5; }
@@ -118,16 +124,6 @@ body {
 .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--secondary-color); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
 .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
 .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-
-/* THIS IS THE KEY FIX: Preventing the input area from being pushed off-screen */
-.chat-input-area {
-    padding: 20px;
-    border-top: 1px solid var(--border-color);
-    background: var(--header-bg);
-    transition: background-color 0.3s, border-color 0.3s;
-    flex-shrink: 0; /* PREVENTS INPUT FROM SHRINKING */
-}
-
 .chat-input-form { display: flex; align-items: center; gap: 15px; }
 .chat-input-form .form-control { background-color: var(--bg-color); color: var(--text-color); border-color: var(--border-color); }
 .form-control, .btn { height: 50px; border-radius: 12px; border: 1px solid var(--border-color); }
@@ -171,23 +167,23 @@ input:checked + .slider:before { transform: translateX(24px); }
 @media (max-width: 576px) {
     /* Stack header items and center them */
     .chat-header {
-        flex-direction: column; /* Stack header items vertically */
-        align-items: flex-start; /* Align text to the left */
+        flex-direction: column;
+        align-items: flex-start;
         gap: 12px;
         padding: 12px 15px;
     }
     .header-controls {
-        width: 100%; /* Make controls take full width */
-        justify-content: space-between; /* Space out the buttons evenly */
+        width: 100%;
+        justify-content: space-between;
         gap: 8px;
     }
     .username-display {
-        display: none; /* Hide welcome text on very small screens */
+        display: none;
     }
 
     /* Fix the dashboard header layout */
     .dashboard-header {
-        flex-direction: column; /* Stack header items vertically */
+        flex-direction: column;
         gap: 10px;
         padding: 1rem;
     }
