@@ -29,14 +29,10 @@ GROQ_MODEL_FAST = os.getenv("GROQ_MODEL_FAST", "gemma-7b-it")
 GROQ_MODEL_LARGE = os.getenv("GROQ_MODEL_LARGE", "gemma2-9b-it")
 
 
-# Database config
-DB_CONFIG = {
-    "host": os.getenv("DB_HOST"),
-    "dbname": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "port": os.getenv("DB_PORT")
-}
+# --- UPDATED DATABASE CONFIG ---
+# This now uses a single DATABASE_URL, which is the standard for production environments like Render.
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 # --- User Authentication Setup ---
 login_manager = LoginManager()
@@ -60,9 +56,12 @@ def load_user(user_id):
         return User(id=user_data[0], username=user_data[1])
     return None
 
-# --- DATABASE HELPER ---
+# --- DATABASE HELPER (UPDATED) ---
 def get_db_connection():
-    return psycopg2.connect(**DB_CONFIG)
+    if DATABASE_URL is None:
+        raise ValueError("DATABASE_URL environment variable is not set")
+    # Connects using the single DATABASE_URL
+    return psycopg2.connect(DATABASE_URL)
 
 # --- TEXT EXTRACTION HELPERS ---
 def extract_text_from_pdf(file_stream):
@@ -342,7 +341,6 @@ def view_notes(subject_id):
         cur.close()
         conn.close()
 
-        # NEW, ADVANCED PROMPT WITH DIAGRAM INSTRUCTIONS
         notes_prompt = f"""
         Act as a master technical writer and educator, combining the detailed, example-rich style of GeeksForGeeks and Javatpoint.
         Your mission is to create a **deeply comprehensive and easily understandable** study guide on the subject of '{subject['name']}', focusing on the following topics: **{topics_str}**.
@@ -507,3 +505,4 @@ def clear_subjects():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
