@@ -122,3 +122,42 @@ input:checked + .slider:before { transform: translateX(24px); }
     .chat-container { height: 100vh; border-radius: 0; }
     .header-title { display: none; }
 }
+
+/* ============================================
+    NEW RESPONSIVE DESIGN FOR MOBILE
+============================================
+*/
+@media (max-width: 768px) {
+
+    /* Make the main container take up the full screen on mobile */
+    .chat-container, .main-dashboard-container, .main-quiz-container, .main-notes-container {
+        height: 100vh;
+        width: 100%;
+        border-radius: 0;
+    }
+
+    /* Fix the chat header layout */
+    .chat-header .header-controls {
+        gap: 8px; /* Reduce gap between buttons */
+    }
+    .chat-header .username-display {
+        display: none; /* Hide the "Welcome" text on small screens to save space */
+    }
+
+    /* Fix the dashboard header layout */
+    .dashboard-header {
+        flex-direction: column; /* Stack header items vertically */
+        gap: 10px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    /* Improve chat message visibility */
+    .chat-messages {
+        padding: 15px;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+}
