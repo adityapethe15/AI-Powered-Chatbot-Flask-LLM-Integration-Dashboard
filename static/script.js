@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileUpload = document.getElementById('file-upload');
     const themeToggle = document.getElementById('theme-checkbox');
     const micBtn = document.getElementById('mic-btn');
+    const menuToggleBtn = document.getElementById('menu-toggle-btn');
+    const sidebar = document.querySelector('.sidebar');
 
     let currentConversationId = null;
 
@@ -14,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fileUpload.addEventListener('change', handleFileUpload);
     themeToggle.addEventListener('change', handleThemeToggle);
     micBtn.addEventListener('click', handleVoiceInput);
+    menuToggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('show');
+    });
 
     // --- Initial Setup ---
     loadConversations();
