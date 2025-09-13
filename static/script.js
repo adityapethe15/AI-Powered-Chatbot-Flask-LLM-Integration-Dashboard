@@ -8,17 +8,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const micBtn = document.getElementById('mic-btn');
     const menuToggleBtn = document.getElementById('menu-toggle-btn');
     const sidebar = document.querySelector('.sidebar');
+    const chatWindow = document.querySelector('.chat-window'); // <-- NEW: Get the chat window element
 
     let currentConversationId = null;
+    
+    // --- Helper function to close the sidebar ---
+    // <-- NEW: A reusable function to close the menu -->
+    function closeSidebar() {
+        sidebar.classList.remove('show');
+    }
 
     // --- Event Listeners ---
     chatForm.addEventListener('submit', handleFormSubmit);
     fileUpload.addEventListener('change', handleFileUpload);
     themeToggle.addEventListener('change', handleThemeToggle);
     micBtn.addEventListener('click', handleVoiceInput);
-    menuToggleBtn.addEventListener('click', () => {
+
+    menuToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevents the click from closing the menu immediately
         sidebar.classList.toggle('show');
     });
+
+    chatWindow.addEventListener('click', closeSidebar); // <-- NEW: Click on chat area to close sidebar
 
     // --- Initial Setup ---
     loadConversations();
@@ -114,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function confirmAndDelete(conversationId, title) {
-        // Custom confirmation instead of window.confirm
         addMessageToChat('bot', `Are you sure you want to delete "${title}"? This cannot be undone. 
             <button class="btn btn-danger btn-sm m-1" onclick="performDelete(${conversationId})">Yes, Delete</button>`);
     }
@@ -123,11 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`/delete_conversation/${conversationId}`, { method: 'DELETE' });
             if (response.ok) {
-                // If deleting the active chat, reset the view
                 if (currentConversationId === conversationId) {
                     createNewConversation();
                 }
-                loadConversations(); // Refresh the list
+                loadConversations();
             } else {
                 const data = await response.json();
                 addMessageToChat('bot', `Error deleting chat: ${data.error || 'Unknown error'}`);
@@ -138,12 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function createNewConversation() {
+        closeSidebar(); // <-- MODIFIED: Close sidebar when starting a new chat
         currentConversationId = null;
         chatMessages.innerHTML = '<div class="message bot"><div class="message-content">New chat started. Ask me anything!</div></div>';
         document.querySelectorAll('#history-list li').forEach(li => li.classList.remove('active'));
     }
 
     async function setActiveConversation(conversationId) {
+        closeSidebar(); // <-- MODIFIED: Close sidebar when selecting a chat
         currentConversationId = conversationId;
         document.querySelectorAll('#history-list li').forEach(li => li.classList.remove('active'));
         const activeItem = [...historyList.children].find(li => li.dataset?.id == conversationId);
@@ -179,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sendMessageToServer(userMessage, file);
             userInput.value = '';
         }
-        fileUpload.value = ''; // Reset file input
+        fileUpload.value = '';
     }
 
     function addMessageToChat(sender, text) {
@@ -188,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const contentElement = document.createElement('div');
         contentElement.classList.add('message-content');
         
-        // Basic Markdown + Button handling
         text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         contentElement.innerHTML = text.replace(/\n/g, '<br>');
 
