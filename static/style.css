@@ -157,8 +157,8 @@ input:checked + .slider:before { transform: translateX(24px); }
 /* --- For Tablets --- */
 @media (max-width: 992px) {
     .sidebar { position: absolute; left: -300px; z-index: 1000; height: 100%; background: var(--chat-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
-    body { height: 100vh; padding: 0; }
-    .chat-container, .main-dashboard-container, .main-quiz-container, .main-notes-container { height: 100vh; border-radius: 0; }
+    body { height: 100%; padding: 0; }
+    .chat-container, .main-dashboard-container, .main-quiz-container, .main-notes-container { height: 100%; border-radius: 0; }
     .header-title { display: none; }
 }
 
